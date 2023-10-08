@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace = "com.example.nasaspaceapps_proyect"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.nasaspaceapps_proyect"
