@@ -131,4 +131,16 @@ public class AdminScreenMessageSend extends AppCompatActivity {
             smsManager.sendTextMessage(numero, null, mensajeAlerta, null, null);
         }
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == SMS_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permiso concedido
+            } else {
+                // Permiso denegado, puedes manejarlo aquí
+            }
+        }
+    }
 }
