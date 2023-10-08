@@ -27,7 +27,7 @@ public class AdminScreenMessageSend extends AppCompatActivity {
 
     double latitudeFija = -8.94431;
     double logitudFija = -75.15337;
-    Button alertButton;
+    private Button alertButton;
 
     private static final int SMS_PERMISSION_REQUEST_CODE = 1;
 
@@ -51,7 +51,7 @@ public class AdminScreenMessageSend extends AppCompatActivity {
         double distanciaKm = distanciaMetros / 1000.0;
 
         // Crear el mensaje de alerta con la distancia y la dirección
-        return String.format("¡Alerta de incendio en tu área! Distancia aproximada.");
+        return String.format("¡Alerta de incendio en tu área! Distancia aproximada: %s km.", distanciaKm);
     }
 
     private String obtenerDireccion(double latitudVariable, double longitudVariable) {
@@ -98,13 +98,10 @@ public class AdminScreenMessageSend extends AppCompatActivity {
             // Aquí puedes poner el código que se ejecutará cuando se haga clic en el botón
             @Override
             public void onClick(View view){
-
-                String mensajeAlerta = calcularDistanciaYDireccion(longitudAtt, latitudeAtt);
-                Toast.makeText(AdminScreenMessageSend.this, "Alerta enviada a los pobladores", Toast.LENGTH_SHORT).show();
-
+                String mensajeAlerta = calcularDistanciaYDireccion(latitudeAtt, longitudAtt);
                 List<String> numeros = leerNumerosDeArchivo("numeros.txt");
                 enviarAlertaSMS(numeros, mensajeAlerta);
-
+                Toast.makeText(AdminScreenMessageSend.this, "Alerta enviada a los pobladores", Toast.LENGTH_SHORT).show();
             }
         });
 
