@@ -17,7 +17,7 @@
             android:id="@+id/appLogo"
             android:layout_width="150px"
             android:layout_height="150px"
-            android:src="@drawable/fuegoFatuo1"
+            android:src="@drawable/fuegofatuo1"
             android:layout_marginEnd="8dp"
             android:layout_gravity="center_vertical|start" />
 
@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
-        android:src="@drawable/DangerIcon"
+        android:src="@drawable/dangericon"
         app:backgroundTint="#FF0000"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />

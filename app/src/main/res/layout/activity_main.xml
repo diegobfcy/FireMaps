@@ -8,11 +8,23 @@
     tools:context=".MainActivity"
     android:background="#EFEAE4">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="LESSFIRE"
+        android:textColor="#FF0000"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/childContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
     <ImageView
         android:id="@+id/myImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/Group2"
+        android:src="@drawable/group2"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -76,6 +88,6 @@
             android:layout_height="80dp"
             android:layout_gravity="center"
             android:background="@drawable/image_circle"
-            android:src="@drawable/fuegoFatuo1" />
+            android:src="@drawable/fuegofatuo1" />
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
