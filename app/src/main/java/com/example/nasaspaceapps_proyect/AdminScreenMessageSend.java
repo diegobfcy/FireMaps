@@ -22,12 +22,18 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class AdminScreenMessageSend extends AppCompatActivity {
     double latitudeAtt;
     double longitudAtt;
 
     double latitudeFija = -8.94431;
-    double logitudFija = -75.15337;
+    double longitudFija = -75.15337;
     private Button alertButton;
 
     private static final int SMS_PERMISSION_REQUEST_CODE = 1;
@@ -36,7 +42,7 @@ public class AdminScreenMessageSend extends AppCompatActivity {
         // Crear objetos de ubicación para las coordenadas
         Location ubicacionFija = new Location("Fija");
         ubicacionFija.setLatitude(latitudeFija);
-        ubicacionFija.setLongitude(logitudFija);
+        ubicacionFija.setLongitude(longitudFija);
 
         Location ubicacionVariable = new Location("Variable");
         ubicacionVariable.setLatitude(latitudVariable);
@@ -52,20 +58,32 @@ public class AdminScreenMessageSend extends AppCompatActivity {
         double distanciaKm = distanciaMetros / 1000.0;
         Log.d("BUG",String.format("¡Alerta de incendio en tu área! Distancia aproximada: %s km.", distanciaKm));
         // Crear el mensaje de alerta con la distancia y la dirección
-        return String.format("¡Alerta de incendio en tu área! Distancia aproximada: %s km.", distanciaKm);
+
+        //return String.format("¡Alerta de incendio en tu área! Distancia aproximada: %s km al", distanciaKm);
+        return "¡Alerta de incendio en tu área!: "+distanciaKm+" km al "+direccion+".";
     }
 
     private String obtenerDireccion(double latitudVariable, double longitudVariable) {
         double deltaLatitud = latitudVariable - latitudeFija;
-        double deltaLongitud = longitudVariable - logitudFija;
+        double deltaLongitud = longitudVariable - longitudFija;  // Tenías un typo aquí (logitudFija)
 
         if (Math.abs(deltaLatitud) < 0.0001 && Math.abs(deltaLongitud) < 0.0001) {
             return "la misma ubicación";
         } else if (deltaLatitud > 0) {
             if (deltaLongitud > 0) {
                 return "noreste";
+            } else if (deltaLongitud < 0) {
+                return "noroeste";
             } else {
                 return "norte";
+            }
+        } else if (deltaLatitud < 0) {
+            if (deltaLongitud > 0) {
+                return "sureste";
+            } else if (deltaLongitud < 0) {
+                return "suroeste";
+            } else {
+                return "sur";
             }
         } else {
             if (deltaLongitud > 0) {
@@ -88,6 +106,9 @@ public class AdminScreenMessageSend extends AppCompatActivity {
 
         longitudAtt = longitude;
         latitudeAtt = latitude;
+        obtenerCondicionesClimaticasActuales();
+        Log.d("Ubicacion",""+longitudAtt+latitudeAtt);
+        Log.d("DIRECCION",obtenerDireccion(latitudeAtt,longitudAtt));
 
         locationInput.setText(latitude + ", " + longitude);
 
@@ -142,5 +163,39 @@ public class AdminScreenMessageSend extends AppCompatActivity {
                 // Permiso denegado, puedes manejarlo aquí
             }
         }
+    }
+    private void obtenerCondicionesClimaticasActuales() {
+        OkHttpClient client = new OkHttpClient();
+
+        String baseUrl = "https://atlas.microsoft.com/weather/currentConditions/json";
+        String apiVersion = "1.1";
+        String coordinates = "47.641268,-122.125679";
+        String subscriptionKey = "m_dAPv51vAE4Hd9qboLftv2sMrXpOZa9dnOdzBKKjRU"; // Reemplaza con tu clave de suscripción
+
+        String url = baseUrl + "?api-version=" + apiVersion + "&query=" + coordinates;
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("subscription-key", subscriptionKey) // Añade tu clave de suscripción en el encabezado
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                // Aquí manejas el error
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseData = response.body().string();
+                    // Procesa y utiliza la respuesta. Puedes convertirla a un objeto usando una librería como Gson.
+                    Log.d("BUG",responseData);
+                } else {
+                    // Maneja el error. La respuesta no fue exitosa.
+                }
+            }
+        });
     }
 }
