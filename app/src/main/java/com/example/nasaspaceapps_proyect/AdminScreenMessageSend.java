@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -49,7 +50,7 @@ public class AdminScreenMessageSend extends AppCompatActivity {
 
         // Convertir la distancia a kilómetros
         double distanciaKm = distanciaMetros / 1000.0;
-
+        Log.d("BUG",String.format("¡Alerta de incendio en tu área! Distancia aproximada: %s km.", distanciaKm));
         // Crear el mensaje de alerta con la distancia y la dirección
         return String.format("¡Alerta de incendio en tu área! Distancia aproximada: %s km.", distanciaKm);
     }
@@ -100,6 +101,7 @@ public class AdminScreenMessageSend extends AppCompatActivity {
             public void onClick(View view){
                 String mensajeAlerta = calcularDistanciaYDireccion(latitudeAtt, longitudAtt);
                 List<String> numeros = leerNumerosDeArchivo("numeros.txt");
+
                 enviarAlertaSMS(numeros, mensajeAlerta);
                 Toast.makeText(AdminScreenMessageSend.this, "Alerta enviada a los pobladores", Toast.LENGTH_SHORT).show();
             }
@@ -125,6 +127,7 @@ public class AdminScreenMessageSend extends AppCompatActivity {
     private void enviarAlertaSMS(List<String> numeros, String mensajeAlerta) {
         SmsManager smsManager = SmsManager.getDefault();
         for (String numero : numeros) {
+            Log.d("bug",numero);
             smsManager.sendTextMessage(numero, null, mensajeAlerta, null, null);
         }
     }

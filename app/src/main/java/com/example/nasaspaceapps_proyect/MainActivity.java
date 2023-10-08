@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         MaterialButton adminButton = findViewById(R.id.button1);
+        MaterialButton userButton = findViewById(R.id.button2);
 
         // Establecer el OnClickListener
         adminButton.setOnClickListener(new View.OnClickListener() {
@@ -24,6 +25,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Iniciar la actividad AdminScreenMap
                 Intent intent = new Intent(MainActivity.this, AdminScreenMap.class);
+                startActivity(intent);
+            }
+        });
+        userButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(MainActivity.this, UserScreenMessage.class);
                 startActivity(intent);
             }
         });
