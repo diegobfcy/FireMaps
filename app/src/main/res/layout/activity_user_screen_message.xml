@@ -46,7 +46,7 @@
         app:srcCompat="@drawable/Group_11" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/button2"
+        android:id="@+id/btnSMS"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/button_shape_red"
