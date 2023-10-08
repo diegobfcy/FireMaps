@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AdminScreenMessageSend"
+    android:background="#EFEAE4">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#FFFFFF"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Logo de la aplicación -->
+        <ImageView
+            android:id="@+id/appLogo"
+            android:layout_width="150px"
+            android:layout_height="150px"
+            android:src="@drawable/fuegoFatuo1"
+            android:layout_marginEnd="8dp"
+            android:layout_gravity="center_vertical|start" />
+
+        <!-- Texto "LESSFIRE" al lado del logo -->
+        <TextView
+            android:id="@+id/appName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LESSFIRE"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#56704B"
+            android:layout_gravity="center_vertical" />
+    </androidx.appcompat.widget.Toolbar>
+    <TextView
+        android:id="@+id/locationLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ubicación"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/topBar"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="16dp"/>
+
+    <!-- Input para la ubicación -->
+    <EditText
+        android:id="@+id/locationInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/locationLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/locationButton"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"/>
+
+    <!-- Botón al lado del input -->
+    <Button
+        android:id="@+id/locationButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Botón"
+        android:backgroundTint="#FC6325"
+        app:layout_constraintTop_toTopOf="@id/locationInput"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="16dp"/>
+
+    <!-- Texto "Mensaje" -->
+    <TextView
+        android:id="@+id/messageLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mensaje"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/locationInput"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="16dp"/>
+
+    <!-- Input para el mensaje -->
+    <EditText
+        android:id="@+id/messageInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/messageLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"/>
+
+    <!-- Advertencia legal y ética -->
+    <TextView
+        android:id="@+id/warningText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Las consecuencias legales y éticas de emitir una alerta falsa son severas e incluyen posibles arrestos y multas sustanciales."
+        android:layout_marginTop="16dp"
+        android:textAlignment="center"
+        app:layout_constraintTop_toBottomOf="@id/messageInput"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Botón "ENVIAR ALERTA" -->
+    <Button
+        android:id="@+id/alertButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ENVIAR ALERTA"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#FF0000"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/warningText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
