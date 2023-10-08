@@ -45,14 +45,36 @@ public class AdminScreenMessageSend extends AppCompatActivity {
         float distanciaMetros = ubicacionFija.distanceTo(ubicacionVariable);
 
         // Calcular la dirección (norte, sur, este, oeste)
-        //String direccion = obtenerDireccion(latitudVariable, longitudVariable);
+        String direccion = obtenerDireccion(latitudVariable, longitudVariable);
 
         // Convertir la distancia a kilómetros
         double distanciaKm = distanciaMetros / 1000.0;
 
         // Crear el mensaje de alerta con la distancia y la dirección
-        return String.format("¡Alerta de incendio en tu área! Distancia aproximada: %s km.", distanciaKm);
+        return String.format("¡Alerta de incendio en tu área! Distancia aproximada.");
     }
+
+    private String obtenerDireccion(double latitudVariable, double longitudVariable) {
+        double deltaLatitud = latitudVariable - latitudeFija;
+        double deltaLongitud = longitudVariable - logitudFija;
+
+        if (Math.abs(deltaLatitud) < 0.0001 && Math.abs(deltaLongitud) < 0.0001) {
+            return "la misma ubicación";
+        } else if (deltaLatitud > 0) {
+            if (deltaLongitud > 0) {
+                return "noreste";
+            } else {
+                return "norte";
+            }
+        } else {
+            if (deltaLongitud > 0) {
+                return "este";
+            } else {
+                return "oeste";
+            }
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
