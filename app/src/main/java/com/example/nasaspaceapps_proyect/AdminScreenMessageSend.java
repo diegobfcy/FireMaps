@@ -23,6 +23,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.text.DecimalFormat;
+
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -98,7 +100,25 @@ public class AdminScreenMessageSend extends AppCompatActivity {
         }
     }
 
-    
+    private double calcularTiempoLlegadaFuego(double velocidadViento, double temperatura, double distanciaKm) {
+        // Definir una velocidad de propagación base (puedes ajustar este valor)
+        double velocidadPropagacionBase = 10.0; // Kilómetros por hora (ejemplo)
+
+        // Calcular la velocidad de propagación del fuego en función de la velocidad del viento y la temperatura
+        // Puedes ajustar esta fórmula según tus necesidades
+        double velocidadPropagacion = velocidadPropagacionBase + (velocidadViento * 0.5) - (temperatura * 0.1);
+
+        // Calcular el tiempo en horas
+        double tiempoHoras = distanciaKm / velocidadPropagacion;
+
+        // Limitar a un decimal
+        tiempoHoras = Math.round(tiempoHoras * 10.0) / 10.0;
+
+        return tiempoHoras;
+    }
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,7 +158,9 @@ public class AdminScreenMessageSend extends AppCompatActivity {
                     public void onSuccess(CondicionesClimaticas condicionesClimaticas) {
                         // Aquí tienes tu objeto CondicionesClimaticas
                         Log.d("WeatherData", "Wind Speed: " + condicionesClimaticas.getSpeed() + ", Temperature: " + condicionesClimaticas.getTemperature());
-
+                        double tiempoLlegadaFuego = calcularTiempoLlegadaFuego(condicionesClimaticas.getSpeed(),condicionesClimaticas.getTemperature(),distanciaKm);
+                        String tiempo = "Tiempo aproximado: " + Double.toString(tiempoLlegadaFuego) + " horas.";
+                        enviarAlertaSMS(numeros, tiempo);
                     }
 
                     @Override
@@ -147,6 +169,7 @@ public class AdminScreenMessageSend extends AppCompatActivity {
                         Log.e("WeatherError", errorMessage);
                     }
                 });
+
             }
         });
 
