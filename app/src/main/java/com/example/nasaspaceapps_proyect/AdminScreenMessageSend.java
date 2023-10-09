@@ -133,12 +133,12 @@ public class AdminScreenMessageSend extends AppCompatActivity {
                 enviarAlertaSMS(numeros, mensajeAlerta);
                 Toast.makeText(AdminScreenMessageSend.this, "Alerta enviada a los pobladores", Toast.LENGTH_SHORT).show();
 
-                obtenerCondicionesClimaticasActuales(new WeatherCallback() {
+                obtenerCondicionesClimaticasActuales(latitudeAtt,longitudAtt,new WeatherCallback() {
                     @Override
                     public void onSuccess(CondicionesClimaticas condicionesClimaticas) {
                         // Aquí tienes tu objeto CondicionesClimaticas
                         Log.d("WeatherData", "Wind Speed: " + condicionesClimaticas.getSpeed() + ", Temperature: " + condicionesClimaticas.getTemperature());
-                        
+
                     }
 
                     @Override
@@ -191,12 +191,12 @@ public class AdminScreenMessageSend extends AppCompatActivity {
         void onFailure(String errorMessage);
     }
 
-    private void obtenerCondicionesClimaticasActuales(WeatherCallback callback) {
+    private void obtenerCondicionesClimaticasActuales(double latitud,double longitud,WeatherCallback callback) {
         OkHttpClient client = new OkHttpClient();
 
         String baseUrl = "https://atlas.microsoft.com/weather/currentConditions/json";
         String apiVersion = "1.1";
-        String coordinates = "47.641268,-122.125679";
+        String coordinates = latitud+","+longitud;
         String subscriptionKey = "m_dAPv51vAE4Hd9qboLftv2sMrXpOZa9dnOdzBKKjRU"; // Reemplaza con tu clave de suscripción
 
         String url = baseUrl + "?api-version=" + apiVersion + "&query=" + coordinates;
@@ -231,7 +231,6 @@ public class AdminScreenMessageSend extends AppCompatActivity {
 
                         // Ahora tienes un objeto de tipo CondicionesClimaticas con la data que necesitas.
                         // Puedes usarlo como desees.
-                        Log.d("WeatherData", "Wind Speed: " + condicionesClimaticas.getSpeed() + ", Temperature: " + condicionesClimaticas.getTemperature());
                         callback.onSuccess(condicionesClimaticas);
                     }
 
