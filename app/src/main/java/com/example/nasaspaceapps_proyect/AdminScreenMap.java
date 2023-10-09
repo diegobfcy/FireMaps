@@ -56,7 +56,7 @@ public class  AdminScreenMap extends AppCompatActivity implements OnMapReadyCall
         @Override
         protected List<FireRecord> doInBackground(Void... voids) {
             FirmsDataFetcher fetcher = new FirmsDataFetcher();
-            String result = fetcher.fetchData("2828ce32622161f15b85f7c26c09483a", "VIIRS_SNPP_NRT", "-85,-57,-32,14", "1");
+            String result = fetcher.fetchData("2828ce32622161f15b85f7c26c09483a", "VIIRS_SNPP_NRT", "-85,-57,-32,14", "2");
             return parseData(result.split("\n")); // Suponiendo que los registros están separados por saltos de línea
         }
 

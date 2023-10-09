@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,7 +55,7 @@ public class AdminScreenMessageSend extends AppCompatActivity {
 
         // Calcular la dirección (norte, sur, este, oeste)
         String direccion = obtenerDireccion(latitudVariable, longitudVariable);
-
+        obtenerCondicionesClimaticasActuales();
         // Convertir la distancia a kilómetros
         double distanciaKm = distanciaMetros / 1000.0;
         Log.d("BUG",String.format("¡Alerta de incendio en tu área! Distancia aproximada: %s km.", distanciaKm));
@@ -178,7 +180,6 @@ public class AdminScreenMessageSend extends AppCompatActivity {
                 .url(url)
                 .addHeader("subscription-key", subscriptionKey) // Añade tu clave de suscripción en el encabezado
                 .build();
-
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -190,8 +191,23 @@ public class AdminScreenMessageSend extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     String responseData = response.body().string();
-                    // Procesa y utiliza la respuesta. Puedes convertirla a un objeto usando una librería como Gson.
-                    Log.d("BUG",responseData);
+
+                    Gson gson = new Gson();
+                    WeatherResponse weatherResponse = gson.fromJson(responseData, WeatherResponse.class);
+
+                    if (weatherResponse.getResults() != null && !weatherResponse.getResults().isEmpty()) {
+                        WeatherResult result = weatherResponse.getResults().get(0);
+
+                        double windSpeedValue = result.getWind().getSpeed().getValue();
+                        double temperatureValue = result.getTemperature().getValue();
+
+                        CondicionesClimaticas condicionesClimaticas = new CondicionesClimaticas(windSpeedValue, temperatureValue);
+
+                        // Ahora tienes un objeto de tipo CondicionesClimaticas con la data que necesitas.
+                        // Puedes usarlo como desees.
+                        Log.d("WeatherData", "Wind Speed: " + condicionesClimaticas.getSpeed() + ", Temperature: " + condicionesClimaticas.getTemperature());
+
+                    }
                 } else {
                     // Maneja el error. La respuesta no fue exitosa.
                 }
