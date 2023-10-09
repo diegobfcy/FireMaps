@@ -153,22 +153,7 @@ public class AdminScreenMessageSend extends AppCompatActivity {
                 enviarAlertaSMS(numeros, mensajeAlerta);
                 Toast.makeText(AdminScreenMessageSend.this, "Alerta enviada a los pobladores", Toast.LENGTH_SHORT).show();
 
-                obtenerCondicionesClimaticasActuales(latitudeAtt,longitudAtt,new WeatherCallback() {
-                    @Override
-                    public void onSuccess(CondicionesClimaticas condicionesClimaticas) {
-                        // Aquí tienes tu objeto CondicionesClimaticas
-                        Log.d("WeatherData", "Wind Speed: " + condicionesClimaticas.getSpeed() + ", Temperature: " + condicionesClimaticas.getTemperature());
-                        double tiempoLlegadaFuego = calcularTiempoLlegadaFuego(condicionesClimaticas.getSpeed(),condicionesClimaticas.getTemperature(),distanciaKm);
-                        String tiempo = "Tiempo aproximado: " + Double.toString(tiempoLlegadaFuego) + " horas.";
-                        enviarAlertaSMS(numeros, tiempo);
-                    }
 
-                    @Override
-                    public void onFailure(String errorMessage) {
-                        // Maneja el error
-                        Log.e("WeatherError", errorMessage);
-                    }
-                });
 
             }
         });
@@ -209,58 +194,7 @@ public class AdminScreenMessageSend extends AppCompatActivity {
             }
         }
     }
-    public interface WeatherCallback {
-        void onSuccess(CondicionesClimaticas condicionesClimaticas);
-        void onFailure(String errorMessage);
-    }
 
-    private void obtenerCondicionesClimaticasActuales(double latitud,double longitud,WeatherCallback callback) {
-        OkHttpClient client = new OkHttpClient();
 
-        String baseUrl = "https://atlas.microsoft.com/weather/currentConditions/json";
-        String apiVersion = "1.1";
-        String coordinates = latitud+","+longitud;
-        String subscriptionKey = "m_dAPv51vAE4Hd9qboLftv2sMrXpOZa9dnOdzBKKjRU"; // Reemplaza con tu clave de suscripción
-
-        String url = baseUrl + "?api-version=" + apiVersion + "&query=" + coordinates;
-
-        Request request = new Request.Builder()
-                .url(url)
-                .addHeader("subscription-key", subscriptionKey) // Añade tu clave de suscripción en el encabezado
-                .build();
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-                callback.onFailure(e.getMessage());
-                // Aquí manejas el error
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    String responseData = response.body().string();
-
-                    Gson gson = new Gson();
-                    WeatherResponse weatherResponse = gson.fromJson(responseData, WeatherResponse.class);
-
-                    if (weatherResponse.getResults() != null && !weatherResponse.getResults().isEmpty()) {
-                        WeatherResult result = weatherResponse.getResults().get(0);
-
-                        double windSpeedValue = result.getWind().getSpeed().getValue();
-                        double temperatureValue = result.getTemperature().getValue();
-
-                        CondicionesClimaticas condicionesClimaticas = new CondicionesClimaticas(windSpeedValue, temperatureValue);
-
-                        // Ahora tienes un objeto de tipo CondicionesClimaticas con la data que necesitas.
-                        // Puedes usarlo como desees.
-                        callback.onSuccess(condicionesClimaticas);
-                    }
-
-                } else {
-                    // Maneja el error. La respuesta no fue exitosa.
-                }
-            }
-        });
-    }
+    
 }
