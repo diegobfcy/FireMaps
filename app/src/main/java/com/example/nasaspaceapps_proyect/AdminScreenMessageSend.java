@@ -54,7 +54,10 @@ public class AdminScreenMessageSend extends AppCompatActivity {
         float distanciaMetros = ubicacionFija.distanceTo(ubicacionVariable);
 
         // Calcular la dirección (norte, sur, este, oeste)
-        obtenerCondicionesClimaticasActuales();
+
+        String direccion = obtenerDireccion(latitudVariable, longitudVariable);
+
+
         // Convertir la distancia a kilómetros
         double distanciaKm = distanciaMetros / 1000.0;
         //Log.d("BUG",String.format("¡Alerta de incendio en tu área! Distancia aproximada: %s km.", distanciaKm));
@@ -108,7 +111,6 @@ public class AdminScreenMessageSend extends AppCompatActivity {
 
         longitudAtt = longitude;
         latitudeAtt = latitude;
-        obtenerCondicionesClimaticasActuales();
         Log.d("Ubicacion",""+longitudAtt+latitudeAtt);
         Log.d("DIRECCION",obtenerDireccion(latitudeAtt,longitudAtt));
 
@@ -130,6 +132,21 @@ public class AdminScreenMessageSend extends AppCompatActivity {
 
                 enviarAlertaSMS(numeros, mensajeAlerta);
                 Toast.makeText(AdminScreenMessageSend.this, "Alerta enviada a los pobladores", Toast.LENGTH_SHORT).show();
+
+                obtenerCondicionesClimaticasActuales(new WeatherCallback() {
+                    @Override
+                    public void onSuccess(CondicionesClimaticas condicionesClimaticas) {
+                        // Aquí tienes tu objeto CondicionesClimaticas
+                        Log.d("WeatherData", "Wind Speed: " + condicionesClimaticas.getSpeed() + ", Temperature: " + condicionesClimaticas.getTemperature());
+                        
+                    }
+
+                    @Override
+                    public void onFailure(String errorMessage) {
+                        // Maneja el error
+                        Log.e("WeatherError", errorMessage);
+                    }
+                });
             }
         });
 
@@ -169,7 +186,12 @@ public class AdminScreenMessageSend extends AppCompatActivity {
             }
         }
     }
-    private void obtenerCondicionesClimaticasActuales() {
+    public interface WeatherCallback {
+        void onSuccess(CondicionesClimaticas condicionesClimaticas);
+        void onFailure(String errorMessage);
+    }
+
+    private void obtenerCondicionesClimaticasActuales(WeatherCallback callback) {
         OkHttpClient client = new OkHttpClient();
 
         String baseUrl = "https://atlas.microsoft.com/weather/currentConditions/json";
@@ -187,6 +209,7 @@ public class AdminScreenMessageSend extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
+                callback.onFailure(e.getMessage());
                 // Aquí manejas el error
             }
 
@@ -209,8 +232,9 @@ public class AdminScreenMessageSend extends AppCompatActivity {
                         // Ahora tienes un objeto de tipo CondicionesClimaticas con la data que necesitas.
                         // Puedes usarlo como desees.
                         Log.d("WeatherData", "Wind Speed: " + condicionesClimaticas.getSpeed() + ", Temperature: " + condicionesClimaticas.getTemperature());
-
+                        callback.onSuccess(condicionesClimaticas);
                     }
+
                 } else {
                     // Maneja el error. La respuesta no fue exitosa.
                 }
