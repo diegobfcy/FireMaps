@@ -40,7 +40,7 @@ public class AdminScreenMessageSend extends AppCompatActivity {
 
     private static final int SMS_PERMISSION_REQUEST_CODE = 1;
 
-    private String calcularDistanciaYDireccion(double latitudVariable, double longitudVariable) {
+    private double calcularDistancia(double latitudVariable, double longitudVariable) {
         // Crear objetos de ubicación para las coordenadas
         Location ubicacionFija = new Location("Fija");
         ubicacionFija.setLatitude(latitudeFija);
@@ -54,15 +54,14 @@ public class AdminScreenMessageSend extends AppCompatActivity {
         float distanciaMetros = ubicacionFija.distanceTo(ubicacionVariable);
 
         // Calcular la dirección (norte, sur, este, oeste)
-        String direccion = obtenerDireccion(latitudVariable, longitudVariable);
         obtenerCondicionesClimaticasActuales();
         // Convertir la distancia a kilómetros
         double distanciaKm = distanciaMetros / 1000.0;
-        Log.d("BUG",String.format("¡Alerta de incendio en tu área! Distancia aproximada: %s km.", distanciaKm));
+        //Log.d("BUG",String.format("¡Alerta de incendio en tu área! Distancia aproximada: %s km.", distanciaKm));
         // Crear el mensaje de alerta con la distancia y la dirección
 
         //return String.format("¡Alerta de incendio en tu área! Distancia aproximada: %s km al", distanciaKm);
-        return "¡Alerta de incendio en tu área!: "+distanciaKm+" km al "+direccion+".";
+        return distanciaKm;
     }
 
     private String obtenerDireccion(double latitudVariable, double longitudVariable) {
@@ -96,6 +95,7 @@ public class AdminScreenMessageSend extends AppCompatActivity {
         }
     }
 
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,7 +122,10 @@ public class AdminScreenMessageSend extends AppCompatActivity {
             // Aquí puedes poner el código que se ejecutará cuando se haga clic en el botón
             @Override
             public void onClick(View view){
-                String mensajeAlerta = calcularDistanciaYDireccion(latitudeAtt, longitudAtt);
+
+                double distanciaKm = calcularDistancia(latitudeAtt, longitudAtt);
+                String direccion = obtenerDireccion(latitudeAtt,longitudAtt);
+                String mensajeAlerta = "¡Alerta de fuego!, Distancia: " + distanciaKm + " - Dirección: " + direccion + ".";
                 List<String> numeros = leerNumerosDeArchivo("numeros.txt");
 
                 enviarAlertaSMS(numeros, mensajeAlerta);
